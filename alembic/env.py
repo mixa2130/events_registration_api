@@ -13,17 +13,17 @@ import sys
 
 sys.path.append(os.path.join(sys.path[0], 'src'))
 
-from src.config import Secrets
-from src.auth.models import metadata as auth_metadata
+from src.context import APP_CTX
+import src.auth.models
+import src.events.models
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
 section = config.config_ini_section
-secret_context = Secrets()
+secret_context = APP_CTX
 config.set_section_option(section, "PG_DSN", secret_context.PG_DSN.__to_string__(hide_password=False))
-
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -34,7 +34,8 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = auth_metadata
+target_metadata = APP_CTX.sa_metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -67,7 +68,8 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(connection=connection, target_metadata=target_metadata, version_table_schema=auth_metadata.schema)
+    context.configure(connection=connection, target_metadata=target_metadata,
+                      version_table_schema=target_metadata.schema)
 
     with context.begin_transaction():
         context.run_migrations()

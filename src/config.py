@@ -67,3 +67,7 @@ class Secrets(metaclass=Singleton):
     @property
     def JWT_SECRET(self) -> str:
         return str(os.getenv('JWT_SECRET'))
+
+    @property
+    def PG_SCHEMA(self) -> str:
+        return str(os.getenv('PG_SCHEMA'))
