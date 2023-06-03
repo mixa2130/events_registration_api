@@ -12,8 +12,21 @@ class EventSchema(BaseModel):
     max_players: int = Field(ge=1, default=100)
     created_at: datetime
 
+    class Config:
+        schema_extra = {
+            "example": {
+                "id": 119,
+                "name": "Runderground jubilee event 2023",
+                "date": "2023-02-20T18:02:13Z",
+                "place": "Moscow, mukomolny passage 2",
+                "price": 2400,
+                "max_players": 77,
+                "created_at": "2023-02-10T15:02:13Z"
+            }
+        }
 
-class AddEventSchema(BaseModel):
+
+class NewEventSchema(BaseModel):
     name: str
     date: datetime = Field(description="ISO 8601 formatted date time")
     place: str
