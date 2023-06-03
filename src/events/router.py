@@ -61,7 +61,7 @@ async def add_event(event: schemas.NewEventSchema, session: AsyncSession = Depen
 
 
 @router.put('/{event_id}',
-            # response_model=schemas.EventSchema,
+            response_model=schemas.EventSchema,
             status_code=status.HTTP_200_OK,
             responses={
                 status.HTTP_404_NOT_FOUND: {
