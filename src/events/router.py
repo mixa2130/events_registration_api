@@ -98,3 +98,16 @@ async def update_event(event_id: int,
     if not updated_event:
         raise HTTPException(status_code=404, detail=f"Id {event_id} not found")
     return schemas.EventSchema(**{k: v for k, v in zip(schemas.EventSchema.__fields__.keys(), updated_event[0])})
+
+
+@router.delete('/{event_id}',
+               status_code=status.HTTP_204_NO_CONTENT,
+               responses={
+                   status.HTTP_404_NOT_FOUND: {
+                       "model": schemas.EventNotFound,
+                       "description": "Event not found"
+                   }
+               })
+async def delete_event(event_id: int,
+                       session: AsyncSession = Depends(APP_CTX.pg_controller.get_session)):
+    pass
