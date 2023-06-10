@@ -13,9 +13,10 @@ import sys
 
 sys.path.append(os.path.join(sys.path[0], 'src'))
 
-from src.context import APP_CTX
 import src.auth.models
 import src.events.models
+from src.context import APP_CTX
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
