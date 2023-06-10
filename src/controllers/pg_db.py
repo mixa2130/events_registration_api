@@ -1,7 +1,6 @@
 import typing as tp
 
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine, async_sessionmaker
 from sqlalchemy.engine import URL
 
 
@@ -22,11 +21,9 @@ class AsyncPGController:
                                                         pool_size=int(pool_size),
                                                         max_overflow=3)
 
-        # noinspection PyTypeChecker
-        self.async_session_factory = sessionmaker(self._engine,
-                                                  autoflush=False,
-                                                  expire_on_commit=False,
-                                                  class_=AsyncSession)
+        self.async_session_factory = async_sessionmaker(self._engine,
+                                                        autoflush=False,
+                                                        expire_on_commit=False)
 
     async def on_shutdown(self):
         await self._engine.dispose()

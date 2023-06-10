@@ -1,5 +1,3 @@
-import typing as tp
-
 from loguru import logger as async_logger
 from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
