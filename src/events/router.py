@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, Response
 
 from sqlalchemy.ext.asyncio import AsyncSession
 import sqlalchemy.exc as sa_exc
@@ -74,7 +74,6 @@ async def update_event(event_id: int,
                        session: AsyncSession = Depends(APP_CTX.pg_controller.get_session)):
     # work with time zone: add extra timezone param as at strava
     event_dict = event.dict()
-    event_dict['date'] = event_dict['date'].replace(tzinfo=None)
 
     # try:
     #     await service.get_event_by_id(session, event_id)
@@ -110,4 +109,11 @@ async def update_event(event_id: int,
                })
 async def delete_event(event_id: int,
                        session: AsyncSession = Depends(APP_CTX.pg_controller.get_session)):
-    pass
+    # TODO: Check user privileges
+    try:
+        ev_id = await service.delete_event(session, event_id)
+    except sa_exc.NoResultFound:
+        APP_CTX.logger.warning(f"No result found for event with id {event_id}")
+        return HTTPException(status_code=404, detail=f"Id {event_id} not found")
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

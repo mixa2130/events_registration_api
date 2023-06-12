@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class EventSchema(BaseModel):
     id: int
     name: str
-    date: datetime
+    start_date: datetime
     place: str
     price: float = Field(ge=0.0, default=0.0)
     max_players: int = Field(ge=1, default=100)
@@ -28,7 +28,7 @@ class EventSchema(BaseModel):
 
 class NewEventSchema(BaseModel):
     name: str
-    date: datetime = Field(description="ISO 8601 formatted date time")
+    start_date: datetime = Field(description="ISO 8601 formatted date time")
     place: str
     price: float = Field(ge=0.0, default=0.0)
     max_players: int = Field(ge=1, default=100)
@@ -37,7 +37,7 @@ class NewEventSchema(BaseModel):
         schema_extra = {
             "example": {
                 "name": "Runderground jubilee event 2023",
-                "date": "2023-02-20T18:02:13Z",
+                "start_date": "2023-02-20T18:02:13Z",
                 "place": "Moscow, mukomolny passage 2",
                 "price": 2400,
                 "max_players": 77
