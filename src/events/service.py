@@ -1,4 +1,7 @@
+import typing as tp
+
 import sqlalchemy.sql as sa
+import sqlalchemy.exc as sa_exc
 from sqlalchemy.inspection import inspect as sa_inspect
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -28,7 +31,11 @@ async def add_event(session: AsyncSession, event: dict) -> int:
 async def get_event_by_id(session: AsyncSession, event_id: int):
     stmt = sa.select(EventsTbl).where(EventsTbl.c.id == event_id)
     res = await session.execute(stmt)
-    return res.all()[0]
+    event = res.one()
+
+    if event is None:
+        raise sa_exc.NoResultFound
+    return event
 
 
 async def update_event(session: AsyncSession, event: dict, event_id: int):
@@ -55,5 +62,4 @@ async def delete_event(session: AsyncSession, event_id: int) -> int:
 
         del_event_stmt = sa.delete(EventsTbl).where(EventsTbl.c.id == event_id).returning(EventsTbl.c.id)
         ev_id = await session.execute(del_event_stmt)
-        return ev_id.one()[0]
-
+        return ev_id.one()

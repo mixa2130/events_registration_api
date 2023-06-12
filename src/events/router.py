@@ -29,7 +29,7 @@ async def get_event(event_id: int,
         event = await service.get_event_by_id(session, event_id)
     except sa_exc.NoResultFound:
         APP_CTX.logger.warning(f"No result found for event with id {event_id}")
-        return HTTPException(status_code=404, detail=f"Id {event_id} not found")
+        raise HTTPException(status_code=404, detail=f"Id {event_id} not found")
 
     return schemas.EventSchema(**{k: v for k, v in zip(schemas.EventSchema.__fields__.keys(), event)})
 
@@ -114,6 +114,6 @@ async def delete_event(event_id: int,
         ev_id = await service.delete_event(session, event_id)
     except sa_exc.NoResultFound:
         APP_CTX.logger.warning(f"No result found for event with id {event_id}")
-        return HTTPException(status_code=404, detail=f"Id {event_id} not found")
+        raise HTTPException(status_code=404, detail=f"Id {event_id} not found")
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
