@@ -9,7 +9,7 @@ class AsyncPGController:
         self.async_session_factory = None
         self._engine = None
 
-    async def get_session(self) -> tp.AsyncGenerator[AsyncSession, tp.Any]:
+    async def get_async_session(self) -> tp.AsyncGenerator[AsyncSession, tp.Any]:
         async with self.async_session_factory() as session:
             yield session
 

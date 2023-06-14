@@ -1,6 +1,6 @@
 from loguru import logger as async_logger
 from sqlalchemy import MetaData
-from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
+from sqlalchemy.orm import declarative_base, DeclarativeMeta
 
 from src.config import Secrets, POSTGRES_INDEXES_NAMING_CONVENTION
 from src.controllers import AsyncPGController

@@ -24,7 +24,7 @@ router = APIRouter(
                 }
             })
 async def get_event(event_id: int,
-                    session: AsyncSession = Depends(APP_CTX.pg_controller.get_session)):
+                    session: AsyncSession = Depends(APP_CTX.pg_controller.get_async_session)):
     try:
         event = await service.get_event_by_id(session, event_id)
     except sa_exc.NoResultFound:
@@ -44,7 +44,8 @@ async def get_event(event_id: int,
             "description": "Event already exists"
         }
     })
-async def add_event(event: schemas.NewEventSchema, session: AsyncSession = Depends(APP_CTX.pg_controller.get_session)):
+async def add_event(event: schemas.NewEventSchema,
+                    session: AsyncSession = Depends(APP_CTX.pg_controller.get_async_session)):
     event_dict = event.dict()
 
     try:
@@ -71,7 +72,7 @@ async def add_event(event: schemas.NewEventSchema, session: AsyncSession = Depen
             })
 async def update_event(event_id: int,
                        event: schemas.NewEventSchema,
-                       session: AsyncSession = Depends(APP_CTX.pg_controller.get_session)):
+                       session: AsyncSession = Depends(APP_CTX.pg_controller.get_async_session)):
     # work with time zone: add extra timezone param as at strava
     event_dict = event.dict()
 
@@ -108,7 +109,7 @@ async def update_event(event_id: int,
                    }
                })
 async def delete_event(event_id: int,
-                       session: AsyncSession = Depends(APP_CTX.pg_controller.get_session)):
+                       session: AsyncSession = Depends(APP_CTX.pg_controller.get_async_session)):
     # TODO: Check user privileges
     try:
         ev_id = await service.delete_event(session, event_id)
