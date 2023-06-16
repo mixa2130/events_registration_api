@@ -7,8 +7,9 @@ from fastapi_users import schemas as fu_schemas
 from fastapi_users import models as fu_models
 from fastapi_users import exceptions as fu_exc
 
-from .models import User
 from src.context import APP_CTX
+from .models import User
+from . import utils
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
@@ -40,7 +41,6 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         # user_db works with db table users
         existing_user = await self.user_db.get_by_email(user_create.email)
 
-        print(existing_user)
         if existing_user is not None:
             raise fu_exc.UserAlreadyExists()
 
@@ -51,7 +51,10 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         )
         password = user_dict.pop("password")
         user_dict["hashed_password"] = self.password_helper.hash(password)
-        user_dict["role_id"] = 2
+
+        # session = await APP_CTX.pg_controller.get_async_session().__anext__()
+        # basic_role_id = await utils.get_basic_user_role_id(session)
+        # user_dict["role_id"] = basic_role_id
 
         created_user = await self.user_db.create(user_dict)
 
