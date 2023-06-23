@@ -5,6 +5,9 @@ import sqlalchemy.exc as sa_exc
 import asyncpg.exceptions as pg_exc
 
 from src.context import APP_CTX
+from src.auth.config import current_user
+from src.auth.models import User
+
 from . import schemas
 from . import service
 
@@ -45,8 +48,13 @@ async def get_event(event_id: int,
         }
     })
 async def add_event(event: schemas.NewEventSchema,
-                    session: AsyncSession = Depends(APP_CTX.pg_controller.get_async_session)):
+                    session: AsyncSession = Depends(APP_CTX.pg_controller.get_async_session),
+                    user: User = Depends(current_user)):
     event_dict = event.dict()
+    event_dict['creator_id'] = user.id
+
+    # Finish virtual transactions from fastapi-users
+    await session.commit()
 
     try:
         event_id = await service.add_event(session, event_dict)

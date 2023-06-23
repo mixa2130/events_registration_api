@@ -9,7 +9,6 @@ from fastapi_users import exceptions as fu_exc
 
 from src.context import APP_CTX
 from .models import User
-from . import utils
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):

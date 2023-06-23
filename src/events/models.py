@@ -4,7 +4,7 @@ from sqlalchemy.sql import sqltypes as sa_types
 from sqlalchemy import schema as sa
 
 from src.context import APP_CTX
-from src.auth.models import RoleTbl
+from src.auth.models import RoleTbl, User
 
 EventsTbl = sa.Table(
     'event',
@@ -16,6 +16,7 @@ EventsTbl = sa.Table(
     sa.Column('price', sa_types.FLOAT, default=0.0),
     sa.Column('max_players', sa_types.INT, default=1000),
     sa.Column('created_at', sa_types.TIMESTAMP, default=datetime.utcnow),
+    sa.Column('creator_id', sa.ForeignKey(User.id)),
     sa.UniqueConstraint('name', 'place', 'start_date', name='uq__event__name__place__date')
 )
 

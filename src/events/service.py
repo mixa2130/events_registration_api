@@ -23,9 +23,9 @@ async def add_event(session: AsyncSession, event: dict) -> int:
             EventsAccessRightsTbl.insert()
             .values({'event_id': event_id, 'role_id': 1})
         )
-
         await session.execute(rights_stmt)
-        return event_id
+
+    return event_id
 
 
 async def get_event_by_id(session: AsyncSession, event_id: int):
