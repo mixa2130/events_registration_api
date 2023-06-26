@@ -13,13 +13,13 @@ api_v1 = FastAPI()
 
 api_v1.include_router(
     fastapi_users.get_auth_router(auth_backend),
-    prefix="/auth",
+    prefix="/auth/jwt",
     tags=["Auth"],
 )
 
 api_v1.include_router(
     fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
+    prefix="/auth/jwt",
     tags=["Auth"],
 )
 
