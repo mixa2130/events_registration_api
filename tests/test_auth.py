@@ -22,12 +22,26 @@ async def test_jwt_register(async_client: httpx.AsyncClient, session: AsyncSessi
     _res.one()
 
 
-async def test_jwt_login(async_client: httpx.AsyncClient):
+async def test_jwt_login(async_client: httpx.AsyncClient, session: AsyncSession):
     login_data = {'username': new_user['email'],
                   'password': new_user['password']
                   }
     response = await async_client.post("/auth/jwt/login", data=login_data)
     assert response.status_code == 204
+
+
+async def test_jwt_login_not_superuser(async_client: httpx.AsyncClient, session: AsyncSession):
+    login_data = {'username': new_user['email'],
+                  'password': new_user['password'],
+                  'is_superuser': True
+                  }
+    response = await async_client.post("/auth/jwt/login", data=login_data)
+    assert response.status_code == 204
+
+    stmt = select(User).where(User.email == new_user['email'])
+    _res = await session.execute(stmt)
+    user = _res.one()[0]
+    assert user.is_superuser is False
 
 
 async def test_jwt_logout(async_client: httpx.AsyncClient):
