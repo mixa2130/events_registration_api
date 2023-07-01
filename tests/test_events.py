@@ -48,6 +48,15 @@ async def test_add_event(jwt_authorized_async_client: httpx.AsyncClient, session
 
     assert len(event) == 1
 
+    # Event already exists
+    al_response = await jwt_authorized_async_client.post('/events', json=test_event)
+    assert al_response.status_code == 400
+
+
+async def test_add_event_unauthorized(async_client: httpx.AsyncClient):
+    response = await async_client.post('/events', json=test_event)
+    assert response.status_code == 401
+
 
 async def test_get_event_base(async_client: httpx.AsyncClient):
     response = await async_client.get('/events/1')
