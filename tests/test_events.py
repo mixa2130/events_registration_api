@@ -33,8 +33,8 @@ async def test_add_role(async_client: httpx.AsyncClient, session: AsyncSession):
     assert _res.all() == [(1, 'admin')], 'Роль не добавлялась'
 
 
-async def test_add_event(authorized_async_client: httpx.AsyncClient, session: AsyncSession):
-    response = await authorized_async_client.post('/events', json=test_event)
+async def test_add_event(jwt_authorized_async_client: httpx.AsyncClient, session: AsyncSession):
+    response = await jwt_authorized_async_client.post('/events', json=test_event)
 
     assert response.status_code == 201
 
